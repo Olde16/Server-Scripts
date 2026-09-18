@@ -52,4 +52,4 @@ This project is licensed under the GNU GPL v3 or later; see the repository `LICE
 
 The script is provided without warranty and may delete data when misconfigured. Test before production use and maintain independent recovery options. No author or contributor assumes responsibility for data loss, downtime, security incidents, misconfiguration, or other damage, to the extent permitted by applicable law.
 
-Parts of this project may be created or modified with generative AI assistance. AI assistance does not replace human review, testing, security review, or deployment responsibility.
+AI tools may be used during development of this repository, including for code and documentation. Before anything is published, I personally review and test the code. Particular attention is given to code quality, security, and reliable operation.
