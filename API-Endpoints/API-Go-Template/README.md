@@ -1,232 +1,92 @@
-# Technology Stack
+# API-Go-Template
 
-## Server / Operating System
+A concrete Go REST API example used by the repository author.
 
-- **Ubuntu Server 24.04 LTS**
-- **Linux**
-- **systemd** for automatic service startup and process management
+This directory is intentionally **not** a generic database/API framework. The Go source files are kept as an example of a working server application and should be treated as such.
 
-## Backend
+## Quick start
 
-- **Go (Golang)**
-- Standard Go HTTP server using `net/http`
-- The API is compiled into a standalone binary and managed through a `systemd` service.
+Requirements:
 
-The backend provides a REST-style API with:
+- Go
+- MySQL
+- a database matching the schema expected by `database.go` and the API code
 
-- Public `GET` endpoints for reading data
-- Authenticated `POST`, `PUT`, and `DELETE` endpoints for modifying data
-- JSON request and response handling
+From this directory:
+
+```bash
+go run .
+```
+
+To build a standalone binary:
+
+```bash
+go build -o api .
+```
+
+The exact database connection details and application behaviour are defined by the existing source code. **The source files are intentionally not modified just to make this example more generic.**
+
+## What's included
+
+- Go HTTP server
+- JSON API endpoints
+- authentication handling
+- MySQL database access
+- CRUD-style endpoints for the application's data model
+- example data/query handlers
+
+The files are split by responsibility so they can also serve as a reference when building a similar small Go API.
 
 ## Database
 
-- **MySQL**
-- Database: `olympics`
+The application expects the database/schema used by the existing code.
 
-The following tables are used:
-
-- `country`
-- `athletes`
-- `medals`
-- `sports`
-- `medals_athletes_sports`
-- `authorized_users`
-- `api_tokens`
-
-The `medals_athletes_sports` table connects countries, athletes, medal types, and sports.
-
-## Authentication
-
-User authentication is handled through the database.
-
-Users are stored in:
+The original database definition is documented below for convenience. It is application-specific and is **not** intended to be a universal database template.
 
 ```text
-olympics.authorized_users
+country
+athletes
+medals
+sports
+medals_athletes_sports
+authorized_users
+api_tokens
 ```
 
-Passwords are stored as hashes rather than plaintext.
+Before running the API against a real database, inspect `database.go` and the authentication code and make sure the connection and credentials are appropriate for your environment.
 
-After successful authentication, the API issues a token. Protected requests must include the token in the HTTP `Authorization` header:
+## Deployment
 
-```text
-Authorization: User <token>
+For a simple server deployment, build the binary and run it using your preferred process manager.
+
+The author's existing setup uses systemd, but the Go application itself does not require systemd.
+
+Example:
+
+```bash
+go build -o api .
+./api
 ```
 
-The API uses the following access model:
+For production use, consider:
 
-| HTTP Method | Authentication |
-|---|---|
-| `GET` | Not required |
-| `POST` | Required |
-| `PUT` | Required |
-| `DELETE` | Required |
+- running as a dedicated unprivileged user
+- protecting database credentials
+- putting the API behind TLS/reverse proxy infrastructure where appropriate
+- restricting database permissions
+- configuring a restart policy
+- monitoring logs and process health
 
-## API Endpoints
+## Important
 
-The API currently provides CRUD functionality for:
+This example may contain assumptions specific to its original application and data model. It is provided primarily as a useful working example, not as a promise that it can be copied into an arbitrary server and work unchanged.
 
-```text
-/api/country
-/api/athletes
-/api/medals
-/api/sports
-/api/medals-athletes-sports
-```
+If you adapt it, review the authentication, database access, error handling, and exposed endpoints before deployment.
 
-Each endpoint supports:
+## License and disclaimer
 
-```text
-GET
-POST
-PUT
-DELETE
-```
+This project is licensed under the GNU GPL v3 or later; see the repository `LICENSE`.
 
-`GET` requests are publicly accessible, while all modifying operations require authentication.
+The code is provided without warranty. No author or contributor assumes responsibility for data loss, downtime, security incidents, misconfiguration, or other damage resulting from its use or modification, to the extent permitted by applicable law.
 
-## Service Management
-
-The Go application is compiled into a standalone Linux binary:
-
-```text
-/var/www/olympics-api/olympics-api
-```
-
-It is started and managed by `systemd` using:
-
-```text
-olympics-api.service
-```
-
-The service is configured to:
-
-- Start automatically during system boot
-- Run the compiled Go API
-- Restart automatically if the application crashes
-
-## Overall Architecture
-
-```text
-Client / Website
-       │
-       │ HTTP + JSON
-       ▼
-┌─────────────────┐
-│     Go API      │
-│                 │
-│  Public GET     │
-│  Authenticated  │
-│  POST/PUT/DELETE│
-└────────┬────────┘
-         │
-         │ MySQL
-         ▼
-┌────────────────────────────┐
-│     Olympics Database      │
-│                            │
-│ • country                  │
-│ • athletes                 │
-│ • medals                   │
-│ • sports                   │
-│ • medals_athletes_sports   │
-│ • authorized_users         │
-│ • api_tokens               │
-└────────────────────────────┘
-```
-
-This stack was chosen to keep the project relatively simple.
-The Go backend runs as a standalone compiled application, so no separate PHP runtime or traditional web server is required for the API itself.
-
-# Database Creation
-
-```sql
-CREATE DATABASE olympics;
-
-USE olympics;
-
-
-CREATE TABLE country (
-    land_id SMALLINT UNSIGNED NOT NULL,
-    land_code CHAR(2) NOT NULL,
-    land_name VARCHAR(100) NOT NULL,
-
-    PRIMARY KEY (land_id),
-    UNIQUE KEY land_code (land_code),
-    UNIQUE KEY land_name (land_name)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_0900_ai_ci;
-
-
-CREATE TABLE athletes (
-    athleten_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    athleten_vorname VARCHAR(100) NOT NULL,
-    athleten_name VARCHAR(100) NOT NULL,
-
-    PRIMARY KEY (athleten_id)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_0900_ai_ci;
-
-
-CREATE TABLE medals (
-    medaillen_id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    art_medaille VARCHAR(50) NOT NULL,
-
-    PRIMARY KEY (medaillen_id)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_0900_ai_ci;
-
-
-CREATE TABLE sports (
-    sportart_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    sportart VARCHAR(100) NOT NULL,
-
-    PRIMARY KEY (sportart_id),
-    UNIQUE KEY unique_sportart (sportart)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_0900_ai_ci;
-
-
-CREATE TABLE medals_athletes_sports (
-    land_id SMALLINT UNSIGNED NOT NULL,
-    athleten_id INT UNSIGNED NOT NULL,
-    medaillen_id SMALLINT UNSIGNED NOT NULL,
-    sportart_id INT UNSIGNED NOT NULL,
-    anzahl_medaillen INT UNSIGNED NOT NULL DEFAULT 0,
-
-    PRIMARY KEY (
-        land_id,
-        athleten_id,
-        medaillen_id,
-        sportart_id
-    ),
-
-    KEY athleten_id (athleten_id),
-    KEY medaillen_id (medaillen_id),
-    KEY sportart_id (sportart_id),
-
-    CONSTRAINT medals_athletes_sports_ibfk_1
-        FOREIGN KEY (land_id)
-        REFERENCES country (land_id)
-        ON DELETE CASCADE,
-
-    CONSTRAINT medals_athletes_sports_ibfk_2
-        FOREIGN KEY (athleten_id)
-        REFERENCES athletes (athleten_id)
-        ON DELETE CASCADE,
-
-    CONSTRAINT medals_athletes_sports_ibfk_3
-        FOREIGN KEY (medaillen_id)
-        REFERENCES medals (medaillen_id),
-
-    CONSTRAINT medals_athletes_sports_ibfk_4
-        FOREIGN KEY (sportart_id)
-        REFERENCES sports (sportart_id)
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_0900_ai_ci;
-```
+Parts of this project may be created or modified with assistance from generative AI tools. AI assistance does not replace human review, testing, security review, or responsibility for deployment.
