@@ -36,16 +36,3 @@ Some files may be created or modified with assistance from generative AI. AI ass
 Unless a file or directory explicitly states otherwise, this repository is licensed under the **GNU General Public License v3 or later**.
 
 See [LICENSE](./LICENSE) for the complete license text.
-
-## Contributing
-
-Useful improvements, bug fixes, portability fixes, documentation, and new small server utilities are welcome.
-
-Please keep contributions:
-
-- easy to understand
-- reasonably self-contained
-- documented
-- conservative with destructive operations
-- explicit about requirements and privileges
-- tested before being described as production-ready
