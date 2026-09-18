@@ -28,7 +28,7 @@ Every example should document:
 - external services such as databases
 - required configuration
 - how to run it locally
-- how to build/deploy it
+- how to build/deploy
 - important security considerations
 
 ## Disclaimer
