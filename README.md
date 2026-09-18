@@ -29,6 +29,8 @@ Some scripts can read, modify, copy, or delete data and may require elevated pri
 
 No author or contributor assumes responsibility for data loss, downtime, security incidents, misconfiguration, or other damage resulting from use or modification, to the extent permitted by applicable law.
 
+## AI assistance
+
 AI tools may be used during development of this repository, including for code and documentation. Before anything is published, I personally review and test the code. Particular attention is given to code quality, security, and reliable operation.
 
 ## License
@@ -36,3 +38,7 @@ AI tools may be used during development of this repository, including for code a
 Unless a file or directory explicitly states otherwise, this repository is licensed under the **GNU General Public License v3 or later**.
 
 See [LICENSE](./LICENSE) for the complete license text.
+
+---
+
+*Built and maintained by Olde16.*
