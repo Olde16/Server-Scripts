@@ -1,0 +1,17 @@
+# Copy to backup.conf and edit for your environment.
+# Do NOT commit backup.conf if it contains environment-specific secrets.
+
+SOURCE_HOST="example.com"
+SOURCE_USER="backup"
+SOURCE_PATH="/var/www/example/"
+
+BACKUP_DIR="/srv/backups/example"
+LOG_DIR="/var/log/server-scripts"
+
+FULL_EVERY_DAYS=14
+RETENTION_DAYS=33
+
+RSYNC_SSH_OPTS="-o BatchMode=yes"
+RSYNC_EXTRA_OPTS=""
+DRY_RUN=false
+LOCK_FILE="/var/lock/server-scripts-backup.lock"
