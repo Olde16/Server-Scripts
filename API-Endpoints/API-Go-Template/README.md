@@ -89,4 +89,4 @@ This project is licensed under the GNU GPL v3 or later; see the repository `LICE
 
 The code is provided without warranty. No author or contributor assumes responsibility for data loss, downtime, security incidents, misconfiguration, or other damage resulting from its use or modification, to the extent permitted by applicable law.
 
-Parts of this project may be created or modified with assistance from generative AI tools. AI assistance does not replace human review, testing, security review, or responsibility for deployment.
+AI tools may be used during development of this repository, including for code and documentation. Before anything is published, I personally review and test the code. Particular attention is given to code quality, security, and reliable operation.
