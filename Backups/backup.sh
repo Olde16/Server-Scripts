@@ -26,7 +26,7 @@ RSYNC_SSH_OPTS="${RSYNC_SSH_OPTS:--}"
 RSYNC_EXTRA_OPTS="${RSYNC_EXTRA_OPTS:-}"
 LOCK_FILE="${LOCK_FILE:-$BACKUP_DIR/.backup.lock}"
 
-for cmd in date mkdir rsync tee ln readlink rm find flock; do
+for cmd in date mkdir rsync tee ln readlink rm find flock cat basename; do
   command -v "$cmd" >/dev/null 2>&1 || { echo "ERROR: Required command not found: $cmd" >&2; exit 1; }
 done
 [[ "$FULL_EVERY_DAYS" =~ ^[0-9]+$ && "$RETENTION_DAYS" =~ ^[0-9]+$ ]] || exit 1
@@ -60,7 +60,9 @@ else
   last_full="$(cat "$LATEST_FULL")"
   if [[ "$last_full" =~ ^[0-9]+$ ]]; then
     days_since_full=$(( ( $(date +%s) - last_full ) / 86400 ))
-    (( days_since_full >= FULL_EVERY_DAYS )) && full_backup=true
+    if (( days_since_full >= FULL_EVERY_DAYS )); then
+      full_backup=true
+    fi
   else
     full_backup=true
   fi
@@ -77,6 +79,9 @@ fi
 
 mkdir -p "$DEST"
 rsync_args=(-a --delete --itemize-changes)
+if [[ "$full_backup" == true ]]; then
+  rsync_args+=(--checksum)
+fi
 if [[ "$full_backup" != true && -n "$link_target" ]]; then
   rsync_args+=("--link-dest=$link_target")
 fi
@@ -100,8 +105,7 @@ fi
 if [[ "$full_backup" == true ]]; then
   date +%s > "$LATEST_FULL"
 elif [[ -n "$last_full" ]]; then
-  printf '%s
-' "$last_full" > "$LATEST_FULL"
+  printf '%s\\n' "$last_full" > "$LATEST_FULL"
 fi
 ln -sfn -- "$DEST" "$LATEST"
 
