@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Samba share for the Windows backup tree.
+# Samba share for the backup tree.
 #
 # Run as root:
 #   sudo ./setup-backup-smb.sh
 #
 # The script configures one read-only SMB share for the complete backup tree.
 # Example from Windows:
-#   \\backupserver\windows-backups
+#   \\backupserver\backups
 
-BACKUP_DIR="/srv/backups/windows"
-SHARE_NAME="windows-backups"
+BACKUP_DIR="/srv/backups"
+SHARE_NAME="backups"
 SMB_USER="backup"
 
 SMB_CONF="/etc/samba/smb.conf"
