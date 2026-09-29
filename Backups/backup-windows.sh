@@ -17,6 +17,7 @@ fi
 source "$CONFIG_FILE"
 
 : "${WINDOWS_USER:?WINDOWS_USER is required}"
+: "${WINDOWS_PASSWORD:?WINDOWS_PASSWORD is required}"
 : "${WINDOWS_SOURCES:?WINDOWS_SOURCES is required}"
 : "${BACKUP_DIR:?BACKUP_DIR is required}"
 : "${LOG_DIR:?LOG_DIR is required}"
@@ -115,14 +116,14 @@ backup_one_source() {
   echo "Backup directory: $host_dir"
   echo "============================================================"
 
-  local sshfs_args=(-o "ConnectTimeout=$SSHFS_TIMEOUT" -o "ServerAliveInterval=15" -o "ServerAliveCountMax=3")
+  local sshfs_args=(-o "ConnectTimeout=$SSHFS_TIMEOUT" -o "ServerAliveInterval=15" -o "ServerAliveCountMax=3" -o password_stdin)
   if [[ -n "$SSHFS_OPTS" ]]; then
     # shellcheck disable=SC2206
     local extra_sshfs_opts=( $SSHFS_OPTS )
     sshfs_args+=( "${extra_sshfs_opts[@]}" )
   fi
 
-  if ! sshfs "${sshfs_args[@]}" "$WINDOWS_USER@$host:$remote_path" "$mount_point"; then
+  if ! printf "%s\n" "$WINDOWS_PASSWORD" | sshfs "${sshfs_args[@]}" "$WINDOWS_USER@$host:$remote_path" "$mount_point"; then
     echo "ERROR: Could not mount $WINDOWS_USER@$host:$remote_path"
     rmdir "$mount_point" 2>/dev/null || true
     return 1
