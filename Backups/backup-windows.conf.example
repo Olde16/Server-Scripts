@@ -10,7 +10,10 @@
 #
 # The script converts the Windows path to an SFTP path for sshfs.
 
+# Existing Windows user used for SFTP access.
 WINDOWS_USER="backup"
+# Password for WINDOWS_USER. Protect backup-windows.conf with chmod 600.
+WINDOWS_PASSWORD="change-me"
 
 WINDOWS_SOURCES=(
     "192.168.1.10|C:\Users"
