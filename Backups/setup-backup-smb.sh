@@ -114,7 +114,6 @@ $MANAGED_BEGIN
     read only = yes
     guest ok = no
     inherit permissions = yes
-    force group = users
 EOF
 
 if [[ -n "$SMB_USER" ]]; then
