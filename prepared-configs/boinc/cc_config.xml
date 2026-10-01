@@ -1,0 +1,9 @@
+<cc_config>
+    <options>
+        <ncpus>8</ncpus>
+        <max_file_xfers>100</max_file_xfers>
+        <max_file_xfers_per_project>10</max_file_xfers_per_project>
+        <allow_remote_gui_rpc>1</allow_remote_gui_rpc>
+        <no_priority_change>1</no_priority_change>
+    </options>
+</cc_config>
