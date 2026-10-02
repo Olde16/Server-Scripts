@@ -5,5 +5,7 @@
         <max_file_xfers_per_project>10</max_file_xfers_per_project>
         <allow_remote_gui_rpc>1</allow_remote_gui_rpc>
         <no_priority_change>1</no_priority_change>
+        <disk_interval>60</disk_interval>
+        <use_all_gpus>1</use_all_gpus>
     </options>
 </cc_config>
