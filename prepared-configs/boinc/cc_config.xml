@@ -7,5 +7,8 @@
         <no_priority_change>1</no_priority_change>
         <disk_interval>60</disk_interval>
         <use_all_gpus>1</use_all_gpus>
+        <cpu_sched_debug>1</cpu_sched_debug>
+        <sched_op_debug>1</sched_op_debug>
+        <work_fetch_debug>1</work_fetch_debug>
     </options>
 </cc_config>
